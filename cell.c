@@ -1,51 +1,89 @@
-#include "include/raylib.h"
+#include <raylib.h>
 
 struct cell {
-    int positionX;
-    int positionY;
-    int radius;
+    int posX;
+    int posY;
+    int width;
+    int height;
     Color color;
-    Vector2 position;
+    bool on;
 };
 
-struct cell create_cell(int positionX, int positionY, int radius, Color color) {
+   
+struct cell create_cell(int posX, int posY, int width, int height, Color color, bool on) {
     struct cell c;
-    c.positionX = positionX;
-    c.positionY = positionY;
-    c.radius = radius;
+    c.posX = posX;
+    c.posY = posY;
+    c.width = width;
+    c.height = height;
     c.color = color;
+    c.on = on;
     return c;
 }
 
 void draw_cell(struct cell c) {
-    DrawCircle(c.positionX, c.positionY, c.radius, c.color);
+    if (c.on == false) {
+        c.color = BLACK;
+    }   
+    DrawRectangle(c.posX, c.posY, c.width, c.height, c.color); 
 }
 
-void move_cell(struct cell *c) {
-    c->positionX += GetRandomValue(-1,1);
-    c->positionY += GetRandomValue(-1,1);
-}
 
-void spawn_cell(struct cell cells[], int numCells, int radius, Color color) {
-        // DrawCircle(centerX + GetRandomValue(-1000, 1000), centerY + GetRandomValue(-1000, 1000), radius, color); 
-       
-        for (int i = 0; i < numCells; i++) {
-            int posX = 1920 / 2 + GetRandomValue(-100,100);
-            int posY = 1080 / 2 + GetRandomValue(-100,100);
-            cells[i] = create_cell(posX, posY, radius, color);
+void check_neighbours(struct cell cells[], int numCells) {
+    for (int i = 0; i < numCells; i++) {
+        if (cells[i].on == true && cells[i+1].on == false) {
+            cells[i].on = true;
         }
-       
-    }
+        // else if (cells[i].on == true && cells[i+1].on == false) {
+        //     cells[i].on = false;
+        // }
 
-void check_collisions(struct cell *a, struct cell *b) {
-    Vector2 positionA = {a->positionX, a->positionY};
-    Vector2 positionB = {b->positionX, b->positionY};
-     
-    if (CheckCollisionCircles(positionA, a->radius, positionB, b->radius)) {
-        a->positionX += GetRandomValue(-4,8);
-        a->positionY += GetRandomValue(-8,4);
-        b->positionX += GetRandomValue(-10,10);
-        b->positionY += GetRandomValue(-10,10);
+        // else if (cells[i].on == true && cells[i-1].on == true) {
+        //     cells[i].on = false;
+        // }
+
+        // else if (cells[i].on == false && cells[i+1].on == true) {
+        //     cells[i].on = true;
+        // }
+
+        // else if (cells[i].on == false && cells[i+3].on == true) {
+        //     cells[i].on = true;
+        //     cells[i+3].on = false;
+        // }
     }
+    
 }
 
+void spawn_grid(struct cell cells[], int numCells) {
+
+    int radius = 7;
+    int width = radius;
+    int height = radius;
+    int posX = 0 + radius;
+    int posY = 0 + radius;
+    bool on = false;
+    Color color = LIGHTGRAY;
+
+      
+    for (int i = 0; i < numCells; i++) {
+        if (posX < 800) {
+            // create double array for [x] and [y] positions
+            cells[i] = create_cell(posX, posY, width, height, color, on);
+            posX += radius;
+            if (posX % 5 > 3) {on = !on;}
+            else if (posY % 9 > 1) {on = false;}
+            
+        }
+        if (posX > 800) {
+            posX = 0;
+            posY += radius;
+            cells[i] = create_cell(posX, posY, width, height, color, on);
+            posX += radius;
+            if (posX % 4 > 0) {on = !on;}
+            else if (posY % 19 > 0) {on = false;}
+           
+        }
+        
+    }
+
+}
