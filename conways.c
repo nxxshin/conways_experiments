@@ -1,7 +1,10 @@
 #include <stdio.h>
 #include "include/raylib.h"
 #include "cell.c"
-#define NUM_CELLS 10000
+
+#include "grid_config.h"
+
+struct cell grid[GRID_HEIGHT][GRID_WIDTH];
 
 
 int main(void)
@@ -16,7 +19,11 @@ int main(void)
     InitWindow(screenWidth, screenHeight, "Conway's Game of Life");
 
     struct cell cells[NUM_CELLS];
-    spawn_grid(cells, NUM_CELLS);
+
+    srand(time(NULL));
+    
+    spawn_grid(grid);
+    
 
     SetTargetFPS(60); 
 
@@ -30,7 +37,7 @@ int main(void)
         //   }
         //}
 
-        check_neighbours(cells, NUM_CELLS);
+        // check_neighbours(cells, NUM_CELLS);
         
         // TODO: Update your variables here
 
@@ -42,9 +49,11 @@ int main(void)
             ClearBackground(BLACK);
             
 
-            for (int i = 0; i < NUM_CELLS; i++) {
-            draw_cell(cells[i]); // Draw each cell
+        for (int y = 0; y < GRID_HEIGHT; y++) {
+        for (int x = 0; x < GRID_WIDTH; x++) {
+            draw_cell(grid[y][x]);
         }
+}
             DrawFPS(10, 10);
 
         
