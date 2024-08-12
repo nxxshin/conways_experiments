@@ -29,8 +29,8 @@ struct cell create_cell(int posX, int posY, int width, int height, Color color, 
 }
 
 void draw_cell(struct cell c) {
-    Color drawColor = c.on ? c.color : BLACK;
-    DrawRectangle(c.posX, c.posY, c.width, c.height, drawColor);
+    c.color = c.on ? c.color : BLACK;
+    DrawRectangle(c.posX, c.posY, c.width, c.height, c.color);
 }
 
 
@@ -48,7 +48,7 @@ void spawn_grid(struct cell cells[GRID_HEIGHT][GRID_WIDTH]) {
         for (int x = 0; x < GRID_WIDTH; x++) {
             posX = x * width + radius;
             posY = y * height + radius;
-            bool on = (rand() % 7 == 0);
+            bool on = (rand() % 25 == 5);
             cells[y][x] = create_cell(posX, posY, width, height, color, on);
 
         }
@@ -59,5 +59,24 @@ void spawn_grid(struct cell cells[GRID_HEIGHT][GRID_WIDTH]) {
 
 
 void check_neighbours(struct cell cells[GRID_HEIGHT][GRID_WIDTH]) {
-    // Your neighbor checking logic here
+
+    // A live cell dies if it has fewer than two live neighbors.
+    for (int y = 0; y < GRID_HEIGHT - 1; y++){
+        for (int x = 0; x < GRID_WIDTH - 1; x++){
+    if (cells[y][x].posX == (cells[y][x+1].posX) ) {
+            cells[y][x].on = true;
+            cells[y][x+1].on = true;
+        }
+    // else if (cells[y][x].posY == cells[y+1][x].posY) {
+    //         cells[y][x].on = true;
+    //         cells[y+2][x].on = true;
+    //     }
+    }
+    }
+
+    // A live cell with two or three live neighbors lives on to the next generation.
+
+    // A live cell with more than three live neighbors dies.
+
+    // A dead cell will be brought back to live if it has exactly three live neighbors.
 }

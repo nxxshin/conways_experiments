@@ -18,10 +18,10 @@ int main(void)
 
     InitWindow(screenWidth, screenHeight, "Conway's Game of Life");
 
-    struct cell cells[NUM_CELLS];
+    struct cell cells[GRID_HEIGHT][GRID_WIDTH];
 
     srand(time(NULL));
-    
+
     spawn_grid(grid);
     
 
@@ -37,7 +37,6 @@ int main(void)
         //   }
         //}
 
-        // check_neighbours(cells, NUM_CELLS);
         
         // TODO: Update your variables here
 
@@ -46,13 +45,17 @@ int main(void)
       
         BeginDrawing();
 
-            ClearBackground(BLACK);
+        ClearBackground(BLACK);
             
+        check_neighbours(cells);
 
         for (int y = 0; y < GRID_HEIGHT; y++) {
         for (int x = 0; x < GRID_WIDTH; x++) {
             draw_cell(grid[y][x]);
         }
+
+
+       
 }
             DrawFPS(10, 10);
 

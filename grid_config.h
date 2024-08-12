@@ -3,6 +3,7 @@
 
 #define GRID_WIDTH 80
 #define GRID_HEIGHT 45
+#define RADIUS 10
 
 #define NUM_CELLS 10000
 
